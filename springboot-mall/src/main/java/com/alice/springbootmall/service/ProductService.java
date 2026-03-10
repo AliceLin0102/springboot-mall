@@ -1,0 +1,7 @@
+package com.alice.springbootmall.service;
+
+import com.alice.springbootmall.model.Product;
+
+public interface ProductService {
+    Product getProductById(Integer productId);
+}
