@@ -19,9 +19,9 @@ public class ProductController {
     public ResponseEntity<Product> getProduct(@PathVariable Integer productId){
         Product product =productService.getProductById(productId);
         if(product != null){
-            return ResponseEntity.status(HttpStatus.OK).body(product);
+            return ResponseEntity.status(HttpStatus.OK).body(product);//body(product):spring會自動把product轉成JSON
         }else{
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();//build():建立ResponseEntity，但不帶body
         }
     }
 }
