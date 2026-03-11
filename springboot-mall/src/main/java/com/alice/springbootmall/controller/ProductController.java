@@ -9,12 +9,24 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class ProductController {
 
     @Autowired
     private ProductService productService;
 
+    //查詢商品列表
+    @GetMapping("/products")
+    public ResponseEntity<List<Product>> getProducts(){
+
+        //products是一種資源，就算是空的，都會回傳200，不會回傳404，這是RESTFul的設計原則
+        List<Product> productList=productService.getProducts();
+        return ResponseEntity.status(HttpStatus.OK).body(productList);
+    }
+
+    //查詢某一個商品
     @GetMapping("/products/{productId}")
     public ResponseEntity<Product> getProduct(@PathVariable Integer productId){ //@PathVariable：從URL路徑中取得變數值
         Product product =productService.getProductById(productId);
@@ -59,5 +71,6 @@ public class ProductController {
 
         //若沒有該Id，就算刪除，一樣會回傳204 No_Content
     }
+
 
 }
