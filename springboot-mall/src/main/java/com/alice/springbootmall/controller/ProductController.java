@@ -1,5 +1,6 @@
 package com.alice.springbootmall.controller;
 
+import com.alice.springbootmall.constant.ProductCategory;
 import com.alice.springbootmall.dto.ProductRequest;
 import com.alice.springbootmall.model.Product;
 import com.alice.springbootmall.service.ProductService;
@@ -19,10 +20,13 @@ public class ProductController {
 
     //查詢商品列表
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getProducts(){
+    public ResponseEntity<List<Product>> getProducts(
+            @RequestParam(required = false ) ProductCategory category,
+            @RequestParam(required = false) String search
+    ){
 
         //products是一種資源，就算是空的，都會回傳200，不會回傳404，這是RESTFul的設計原則
-        List<Product> productList=productService.getProducts();
+        List<Product> productList=productService.getProducts(category,search);
         return ResponseEntity.status(HttpStatus.OK).body(productList);
     }
 
