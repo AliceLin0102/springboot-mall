@@ -2,6 +2,7 @@ package com.alice.springbootmall.dao.impl;
 
 import com.alice.springbootmall.constant.ProductCategory;
 import com.alice.springbootmall.dao.ProductDao;
+import com.alice.springbootmall.dto.ProductQueryParams;
 import com.alice.springbootmall.dto.ProductRequest;
 import com.alice.springbootmall.model.Product;
 import com.alice.springbootmall.rowmapper.ProductRowMapper;
@@ -20,7 +21,7 @@ public class ProductDaoImpl implements ProductDao {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
-    public List<Product> getProducts(ProductCategory category,String search) {
+    public List<Product> getProducts(ProductQueryParams productQueryParams) {
 
         String sql="SELECT product_id,product_name,category,image_url,price,stock,description," +
                 "created_date,last_modified_date FROM product WHERE 1=1" ;
@@ -28,13 +29,13 @@ public class ProductDaoImpl implements ProductDao {
         Map<String,Object> map=new HashMap<>();
 
         //WHERE 1=1:讓拼接可以使用
-        if(category != null){
+        if(productQueryParams.getCategory() != null){
             sql=sql +" AND category=:category";//AND前面記得要留空白
-            map.put("category",category.name());
+            map.put("category",productQueryParams.getCategory());
         }
-        if(search != null){
+        if(productQueryParams.getSearch() != null){
             sql=sql+" AND product_name LIKE :search";
-            map.put("search","%"+ search +"%");//模糊查詢一定要寫在map裡，不能寫在上方sql。
+            map.put("search","%"+ productQueryParams.getSearch() +"%");//模糊查詢一定要寫在map裡，不能寫在上方sql。
         }
 
         List<Product> productList=namedParameterJdbcTemplate.query(sql,map,new ProductRowMapper());

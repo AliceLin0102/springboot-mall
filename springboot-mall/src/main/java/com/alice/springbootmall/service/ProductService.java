@@ -1,6 +1,7 @@
 package com.alice.springbootmall.service;
 
 import com.alice.springbootmall.constant.ProductCategory;
+import com.alice.springbootmall.dto.ProductQueryParams;
 import com.alice.springbootmall.dto.ProductRequest;
 import com.alice.springbootmall.model.Product;
 
@@ -8,7 +9,7 @@ import java.util.List;
 
 public interface ProductService {
 
-    List<Product> getProducts(ProductCategory category,String search);
+    List<Product> getProducts(ProductQueryParams productQueryParams);
 
     Product getProductById(Integer productId);
 
