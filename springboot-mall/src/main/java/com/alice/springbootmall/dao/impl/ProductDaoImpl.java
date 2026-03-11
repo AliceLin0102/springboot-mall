@@ -30,13 +30,18 @@ public class ProductDaoImpl implements ProductDao {
 
         //WHERE 1=1:讓拼接可以使用
         if(productQueryParams.getCategory() != null){
-            sql=sql +" AND category=:category";//AND前面記得要留空白
-            map.put("category",productQueryParams.getCategory());
+            sql=sql +" AND category=:category ";//AND前面記得要留空白
+            map.put("category",productQueryParams.getCategory().name());//.name()永遠固定，不會被修改。.toString()有可能被override
         }
-        if(productQueryParams.getSearch() != null){
-            sql=sql+" AND product_name LIKE :search";
-            map.put("search","%"+ productQueryParams.getSearch() +"%");//模糊查詢一定要寫在map裡，不能寫在上方sql。
+        if(productQueryParams.getSearch() != null) {
+            sql = sql + " AND product_name LIKE :search ";
+            map.put("search", "%" + productQueryParams.getSearch() + "%");//模糊查詢一定要寫在map裡，不能寫在上方sql。
         }
+
+        //ORDER BY只能用拼接，不能用變數！
+        //ORDER BY不用驗證是否為null，因為controller有給defaultValue，就不會是null
+        //ORDER BY前後都要記得留下空白鍵
+        sql=sql+" ORDER BY "+productQueryParams.getOrderBy()+" "+productQueryParams.getSort();
 
         List<Product> productList=namedParameterJdbcTemplate.query(sql,map,new ProductRowMapper());
 

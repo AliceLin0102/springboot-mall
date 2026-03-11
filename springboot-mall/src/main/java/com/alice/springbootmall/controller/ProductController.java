@@ -22,12 +22,19 @@ public class ProductController {
     //查詢商品列表
     @GetMapping("/products")
     public ResponseEntity<List<Product>> getProducts(
+            //查詢條件(filtering)
             @RequestParam(required = false ) ProductCategory category,
-            @RequestParam(required = false) String search
+            @RequestParam(required = false) String search,
+
+            //排序(sorting)
+            @RequestParam(defaultValue = "created_date") String orderBy,//預設是用created_date"來商品排序，若有設定值就會以值為主
+            @RequestParam(defaultValue = "desc") String sort //預設用降序
     ){
         ProductQueryParams productQueryParams = new ProductQueryParams();
         productQueryParams.setCategory(category);
         productQueryParams.setSearch(search);
+        productQueryParams.setOrderBy(orderBy);
+        productQueryParams.setSort(sort);
 
         //products是一種資源，就算是空的，都會回傳200，不會回傳404，這是RESTFul的設計原則
         List<Product> productList=productService.getProducts(productQueryParams);
