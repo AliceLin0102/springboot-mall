@@ -31,4 +31,23 @@ public class ProductController {
         Product product=productService.getProductById(productId);
         return ResponseEntity.status(HttpStatus.CREATED).body(product);//CREATED:狀態碼201，是當成功新增資料時，是HTTP標準建議回傳
     }
+
+    @PutMapping("/products/{productId}")
+    public ResponseEntity<Product> updateProduct(@PathVariable Integer productId,
+                                                 @RequestBody @Valid ProductRequest productRequest){
+
+        //檢查product是否存在
+        Product  product=productService.getProductById(productId);
+        if(product == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        //修改商品數據
+        productService.updateProduct(productId,productRequest);
+
+        Product updateProduct =productService.getProductById(productId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(updateProduct);
+    }
+
 }
