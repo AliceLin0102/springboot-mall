@@ -5,6 +5,7 @@ import com.alice.springbootmall.dto.ProductQueryParams;
 import com.alice.springbootmall.dto.ProductRequest;
 import com.alice.springbootmall.model.Product;
 import com.alice.springbootmall.service.ProductService;
+import com.alice.springbootmall.util.Page;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -25,7 +26,7 @@ public class ProductController {
 
     //查詢商品列表
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getProducts(
+    public ResponseEntity<Page<Product>> getProducts(
             //查詢條件(filtering)
             @RequestParam(required = false ) ProductCategory category,
             @RequestParam(required = false) String search,
@@ -46,9 +47,21 @@ public class ProductController {
         productQueryParams.setLimit(limit);
         productQueryParams.setOffset(offset);
 
+        //取得product list
         //products是一種資源，就算是空的，都會回傳200，不會回傳404，這是RESTFul的設計原則
         List<Product> productList=productService.getProducts(productQueryParams);
-        return ResponseEntity.status(HttpStatus.OK).body(productList);
+
+        //取得product 總數
+        Integer total =productService.countProduct(productQueryParams);//商品總比數會根據查詢跳間不同而改變，例如：FOOD類和CAR類的個別總比數不同
+
+        //分頁
+        Page<Product> page=new Page<>();
+        page.setLimit(limit);
+        page.setOffset(offset);
+        page.setTotal(total);
+        page.setResults(productList);
+
+        return ResponseEntity.status(HttpStatus.OK).body(page);
     }
 
     //查詢某一個商品
