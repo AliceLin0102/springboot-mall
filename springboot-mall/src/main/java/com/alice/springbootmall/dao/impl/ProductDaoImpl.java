@@ -27,14 +27,7 @@ public class ProductDaoImpl implements ProductDao {
 
         Map<String,Object> map=new HashMap<>();
 
-        if(productQueryParams.getCategory() != null){
-            sql=sql +" AND category=:category ";//AND前面記得要留空白
-            map.put("category",productQueryParams.getCategory().name());
-        }
-        if(productQueryParams.getSearch() != null) {
-            sql = sql + " AND product_name LIKE :search ";
-            map.put("search", "%" + productQueryParams.getSearch() + "%");
-        }
+        sql=addFilteringSql(sql,map,productQueryParams);
 
         Integer total =  namedParameterJdbcTemplate.queryForObject(sql,map,Integer.class);//Integer.class：表示要將返回值設定為Integer
 
@@ -51,14 +44,8 @@ public class ProductDaoImpl implements ProductDao {
 
         //查詢條件
         //WHERE 1=1:讓拼接可以使用
-        if(productQueryParams.getCategory() != null){
-            sql=sql +" AND category=:category ";//AND前面記得要留空白
-            map.put("category",productQueryParams.getCategory().name());//.name()永遠固定，不會被修改。.toString()有可能被override
-        }
-        if(productQueryParams.getSearch() != null) {
-            sql = sql + " AND product_name LIKE :search ";
-            map.put("search", "%" + productQueryParams.getSearch() + "%");//模糊查詢一定要寫在map裡，不能寫在上方sql。
-        }
+        sql=addFilteringSql(sql,map,productQueryParams);
+
         //排序
         //ORDER BY只能用拼接，不能用變數！
         //ORDER BY不用驗證是否為null，因為controller有給defaultValue，就不會是null
@@ -147,5 +134,19 @@ public class ProductDaoImpl implements ProductDao {
         map.put("productId",productId);
 
         namedParameterJdbcTemplate.update(sql,map);
+    }
+
+    private String addFilteringSql(String sql,Map<String,Object> map,ProductQueryParams productQueryParams){
+
+        if(productQueryParams.getCategory() != null){
+            sql=sql +" AND category=:category ";//AND前面記得要留空白
+            map.put("category",productQueryParams.getCategory().name());//.name()永遠固定，不會被修改。.toString()有可能被override
+        }
+        if(productQueryParams.getSearch() != null) {
+            sql = sql + " AND product_name LIKE :search ";
+            map.put("search", "%" + productQueryParams.getSearch() + "%");//模糊查詢一定要寫在map裡，不能寫在上方sql。
+        }
+
+        return sql;
     }
 }
