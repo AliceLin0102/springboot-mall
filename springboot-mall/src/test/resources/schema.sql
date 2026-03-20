@@ -10,3 +10,14 @@ CREATE TABLE IF NOT EXISTS product
     created_date       TIMESTAMP    NOT NULL,
     last_modified_date TIMESTAMP    NOT NULL
     );
+
+
+--h2資料庫中：1.user是關鍵字，必須要加反引號。 2.UNIQUE 不能加KEY--
+CREATE TABLE IF NOT EXISTS `user`
+(
+    user_id            INT          NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    email              VARCHAR(256) NOT NULL UNIQUE,
+    password           VARCHAR(256) NOT NULL,
+    created_date       TIMESTAMP    NOT NULL,
+    last_modified_date TIMESTAMP    NOT NULL
+    );

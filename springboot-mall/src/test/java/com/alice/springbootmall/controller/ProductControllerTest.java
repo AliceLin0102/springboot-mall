@@ -60,6 +60,7 @@ public class ProductControllerTest {
     @Transactional
     @Test
     public void createProduct_success() throws Exception {
+        // step 1 ：準備測試資料
         ProductRequest productRequest = new ProductRequest();
         productRequest.setProductName("test food product");
         productRequest.setCategory(ProductCategory.FOOD);
@@ -67,14 +68,20 @@ public class ProductControllerTest {
         productRequest.setPrice(100);
         productRequest.setStock(2);
 
+        // step 2 ：轉成JSON格式，模擬前段
         String json = objectMapper.writeValueAsString(productRequest);
 
+        // step 3 ：建立Request（模擬Http）
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .post("/products")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json);
 
+        // step 4 ：發送請求
         mockMvc.perform(requestBuilder)
+
+                //驗證結果
+                //$ →代表JSON根節點，去取出欄位
                 .andExpect(status().is(201))
                 .andExpect(jsonPath("$.productName", equalTo("test food product")))
                 .andExpect(jsonPath("$.category", equalTo("FOOD")))
