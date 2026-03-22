@@ -34,6 +34,8 @@ public class OrderDaoImpl  implements OrderDao {
         //查詢條件
         sql=addFilteringSql(sql,map,orderQueryParams);
 
+        //queryForObject：回傳"單一"結果(查單筆 or count)
+        //query: 回傳List(查多筆)
         Integer total =namedParameterJdbcTemplate.queryForObject(sql,map,Integer.class);
 
         return total;

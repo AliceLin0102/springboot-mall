@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
+//RowMapper：把資料庫的「一列資料」轉換成「Java物件」的工具
 public class OrderRowMapper implements RowMapper<Order> {
 
     @Override
