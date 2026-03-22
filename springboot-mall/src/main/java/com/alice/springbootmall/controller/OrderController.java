@@ -24,16 +24,16 @@ public class OrderController {
 
 
     @GetMapping("/users/{userId}/orders")
-    public ResponseEntity<Page<Order>>  getOrders(@PathVariable Integer userId,
-                                                  @RequestParam(defaultValue = "10") @Max(1000) @Min(0) Integer limit,
-                                                  @RequestParam(defaultValue = "0") @Min(0) Integer offset){
-        OrderQueryParams orderQueryParams =new OrderQueryParams();
+    public ResponseEntity<Page<Order>> getOrders(@PathVariable Integer userId,
+                                                 @RequestParam(defaultValue = "10") @Max(1000) @Min(0) Integer limit,
+                                                 @RequestParam(defaultValue = "0") @Min(0) Integer offset) {
+        OrderQueryParams orderQueryParams = new OrderQueryParams();
         orderQueryParams.setUserId(userId);
         orderQueryParams.setLimit(limit);
         orderQueryParams.setOffset(offset);
 
         //取得 order list
-        List<Order> orderList=orderService.getOrders(orderQueryParams);
+        List<Order> orderList = orderService.getOrders(orderQueryParams);
 
         //取得 order 總數
         Integer count = orderService.countOrder(orderQueryParams);
@@ -51,11 +51,11 @@ public class OrderController {
 
     @PostMapping("/users/{userId}/orders")
     public ResponseEntity<?> createOrder(@PathVariable Integer userId,
-                                         @RequestBody @Valid CreateOrderRequest createOrderRequest){
+                                         @RequestBody @Valid CreateOrderRequest createOrderRequest) {
 
-        Integer orderId=orderService.createOrder(userId,createOrderRequest);
+        Integer orderId = orderService.createOrder(userId, createOrderRequest);
 
-        Order order=orderService.getOrderById(orderId);
+        Order order = orderService.getOrderById(orderId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
